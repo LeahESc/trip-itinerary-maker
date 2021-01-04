@@ -12,3 +12,8 @@ Category.create(name: "Museums")
 Category.create(name: "Hikes")
 Category.create(name: "Tours")
 Category.create(name: "Sights")
+
+Trip.create(destination: "Paris")
+Trip.create(name: "Bali")
+Trip.create(name: "Redwood National Park")
+
