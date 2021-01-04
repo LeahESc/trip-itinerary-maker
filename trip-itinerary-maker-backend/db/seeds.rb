@@ -17,3 +17,7 @@ Trip.create(destination: "Paris")
 Trip.create(destination: "Bali")
 Trip.create(destination: "Redwood National Park")
 
+TripCategory.create(category_id: 1, trip_id: 1)
+TripCategory.create(category_id: 2, trip_id: 1)
+TripCategory.create(category_id: 3, trip_id: 1)
+TripCategory.create(category_id: 4, trip_id: 3)

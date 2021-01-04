@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function fetchTrips(){
-    
     fetch(BASE_URL + "/trips")
     .then(resp => resp.json())
     .then(trips => {
@@ -26,13 +25,49 @@ function showTrips(trips) {
             <li>${category.name}</li>
             `
         })
-        let viewItinerary = document.createElement("button")
-        viewItinerary.innerHTML = `
+        let view = document.createElement("button")
+        view.setAttribute("id", "viewBtn")
+        view.setAttribute("data-id", `${trip.id}`)
+        view.innerHTML = `
         View full Itinerary
         `
-        main.appendChild(viewItinerary)
+        main.appendChild(view)
+        attachClicksToButtons()
     })
-    viewItinerary.addEventListener(showTrip())
+    
+}
+
+function attachClicksToButtons() {
+    const viewButtons = document.querySelectorAll("#viewBtn")
+    viewButtons.forEach(button => { 
+        button.addEventListener('click', showTrip)
+    })
+}
+
+function showTrip(e) { 
+    let id = e.target.dataset.id
+    fetch(BASE_URL + `/trips/${id}`)
+    .then(resp => resp.json())
+    .then(trip => {
+        main = ""
+        let categoryUl = document.createElement(ul)
+        let itemLi = document.createElement(li)
+        main.innerHTML += `
+        <h1>${trip.destination}</h1>
+        `
+        main.appendChild(categoryUl)
+        categoryUl.appendChil(itemLi)
+        trip.categories.forEach(category => {
+            categoryUl.innerHTML += `
+            ${category.name}
+            `
+            category.items.forEach(item => { 
+                itemLi.innerHTML += `
+                ${item.name}
+                `
+            })
+        })
+    })
 }
 
 
