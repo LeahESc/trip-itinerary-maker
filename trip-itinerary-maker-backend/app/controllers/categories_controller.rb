@@ -15,6 +15,7 @@ class CategoriesController < ApplicationController
 
   # POST /categories
   def create
+    binding.pry
     @category = Category.new(category_params)
 
     if @category.save
@@ -46,6 +47,6 @@ class CategoriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def category_params
-      params.require(:category).permit(:name)
+      params.require(:category).permit(:name, trip_ids:[])
     end
 end

@@ -106,9 +106,13 @@ function showTrip(e) {
     .then(trip => {
         console.log(trip)
         main.innerHTML = `<h1>${trip.destination}</h1>`
+        let categoryDiv = document.createElement('div')
+        categoryDiv.setAttribute("id", "category-div")
+        categoryDiv.setAttribute("data-tripid",`${trip.id}`)
+        main.appendChild(categoryDiv)
         let addCategory = document.createElement("button")
         addCategory.setAttribute("id", "categoryBtn")
-        main.appendChild(addCategory)
+        categoryDiv.appendChild(addCategory)
         addCategory.innerHTML = `Add Category`
         // addCategory.addEventListener('click', displayCategoryForm)
         trip.categories.forEach(category => {
@@ -134,29 +138,41 @@ function showTrip(e) {
 }
 
 function displayCategoryForm(e){ 
-    console.log("woohoo")
-    let categoryForm = document.createElement("form")
-
-    // let i = document.createElement("input") //input element, text
-    // i.setAttribute('type',"text")
-    // i.setAttribute('id',"name")
-
-    // let s = document.createElement("input") //input element, Submit button
-    // s.setAttribute('type',"submit")
-    // s.setAttribute('value',"Submit")
-
-    categoryForm.innerHTML =  `
+    let categoryDiv = document.querySelector('#category-div')
+    let tripId = categoryDiv.dataset.tripid
+    fetch(BASE_URL + '/categories')
+    .then(resp => resp.json())
+    .then(categories => {
+        let categoryCheckboxes = categories.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
+       
+        categoryDiv.innerHTML =  `
+        <form id="category-form" data-tripId="${tripId}">
+            <label>Select from Existing:</label>
+            ${categoryCheckboxes} <br>
             <label>Create a New Category:</label>
             <input type="text" id="destination">
             <input type="submit">
-    `
-    categoryForm.addEventListener('submit', createCategory)
+        </form>
+        `
+        document.querySelector("#category-form").addEventListener('submit', createCategory)
+    })
 }
 
 function createCategory(e){
-    console.log(e.target)
-    // e.preventDefault()
-    // let category
+    e.preventDefault()
+   let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
+    if (arr.length === 0){
+        // fetch create new category -- let the destination know it has it
+        let newCategory = {
+            name: e.target.querySelector("#destination").value,
+            trip_ids: [e.target.dataset.tripid]
+        } 
+        console.log(newCategory)
+    }else { 
+        let categoryName = arr[0].value
+        // fetch update destination to include this category in trip
+    }
+    
 }
 
 function displayItemForm(){ 
