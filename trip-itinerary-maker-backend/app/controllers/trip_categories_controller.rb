@@ -1,0 +1,2 @@
+class TripCategoriesController < ApplicationController
+end

@@ -1,0 +1,2 @@
+class TripCategory < ApplicationRecord
+end

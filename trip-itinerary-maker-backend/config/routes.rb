@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :trip_categories
   resources :items
   resources :categories
   resources :trips
