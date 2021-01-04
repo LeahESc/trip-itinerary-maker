@@ -12,8 +12,8 @@ function fetchTrips(){
     .then(resp => resp.json())
     .then(trips => {
         showTrips(trips)
-    }
-    )}
+    })
+}
 
 function showTrips(trips) { 
     trips.map(trip => {
@@ -45,27 +45,33 @@ function attachClicksToButtons() {
 }
 
 function showTrip(e) { 
+    console.log(e.target)
     let id = e.target.dataset.id
+    // let categoryUl = document.createElement("ul")
+    let itemLi = document.createElement("li")
+    let main = document.querySelector("#main")
+    main.innerHTML = ""
+    // main.appendChild(categoryUl)
+    // categoryUl.appendChild(itemLi)
     fetch(BASE_URL + `/trips/${id}`)
     .then(resp => resp.json())
     .then(trip => {
-        main = ""
-        let categoryUl = document.createElement(ul)
-        let itemLi = document.createElement(li)
-        main.innerHTML += `
-        <h1>${trip.destination}</h1>
-        `
-        main.appendChild(categoryUl)
-        categoryUl.appendChil(itemLi)
+        console.log(trip)
+        main.innerHTML = `<h1>${trip.destination}</h1>`
         trip.categories.forEach(category => {
-            categoryUl.innerHTML += `
-            ${category.name}
-            `
+        main.innerHTML += `
+        <h3>${category.name}<h3>
+        `
+        if (category.items){ 
             category.items.forEach(item => { 
-                itemLi.innerHTML += `
-                ${item.name}
-                `
+            itemLi.innerHTML += `
+            ${item.name}
+            `
             })
+        }
+        let addItem = document.createElement("button")
+        main.appendChild(addItem)
+        addItem.innerHTML = `Add Item`
         })
     })
 }
