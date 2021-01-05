@@ -235,21 +235,21 @@ function createCategory(e){
          clearCategoryForm()
     
     } else { 
-        let category = {
+        let updateCategory = {
             name: arr[0].value,
-            id: arr[0].value.id,
+            id: arr[0].id,
             trip_ids: [e.target.dataset.tripid]
         }
-        
+
         let configObj = {
             method: 'PATCH',
-            body: JSON.stringify(category),
+            body: JSON.stringify(updateCategory),
             headers: {
                 'Content-type': 'application/json',
                 'Accept': 'application/json'
             }
         }
-        fetch(BASE_URL + `"/categories/${category.id}"`, configObj)
+        fetch(BASE_URL + `/categories/${updateCategory.id}`, configObj)
         .then(resp => resp.json())
         .then(category => {
             let categoryList = document.createElement('div')
