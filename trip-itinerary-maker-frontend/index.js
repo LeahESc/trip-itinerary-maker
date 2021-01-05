@@ -36,7 +36,7 @@ function createTrip(e){
         body: JSON.stringify(trip),
         headers: {
             'Content-type': 'application/json',
-            'Accept': 'applicatoin/json'
+            'Accept': 'application/json'
         }
     }
     fetch(BASE_URL + '/trips', configObj)
@@ -162,16 +162,41 @@ function createCategory(e){
     e.preventDefault()
    let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
     if (arr.length === 0){
-        // fetch create new category -- let the destination know it has it
         let newCategory = {
             name: e.target.querySelector("#destination").value,
             trip_ids: [e.target.dataset.tripid]
-        } 
+        }
         console.log(newCategory)
-    }else { 
-        let categoryName = arr[0].value
+        let configObj = {
+            method: 'POST',
+            body: JSON.stringify(newCategory),
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        fetch(BASE_URL + '/categories', configObj)
+        .then(resp => resp.json())
+        .then(category => {
+            main.innerHTML += `
+            <h2>${category.name}</h2>
+            `
+            console.log(category)
+            // let addItem = document.createElement("button")
+            // main.appendChild(addItem)
+            // addItem.setAttribute("id", "itemBtn")
+            // addItem.innerHTML = `Add Item`
+            // addItem.addEventListener('click', displayItemForm)
+        }) 
+         // fetch create new category -- let the destination know it has it
+    
+        } 
+        
+    // }else { 
+    //     let categoryName = arr[0].value
+        
         // fetch update destination to include this category in trip
-    }
+    // }
     
 }
 
