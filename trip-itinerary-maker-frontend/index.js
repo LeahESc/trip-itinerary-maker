@@ -266,7 +266,7 @@ function createCategory(e){
             `
             let addItem = document.createElement("button")
             addItem.setAttribute("id", "itemBtn")
-            addItem.setAttribute("data-categoryId", `${c.id}`)
+            addItem.setAttribute("data-categoryId", `${category.id}`)
             addItem.innerHTML = `Add Item`
             categoryList.appendChild(addItem)
         }) 
@@ -282,7 +282,7 @@ function displayItemForm(e){
     catDiv.appendChild(itemForm)
 
     itemForm.innerHTML =  `
-     <form id="new-item-form" data-categoryId="${catDiv.dataset.id}">
+     <form id="new-item-form" data-categoryId="${catDiv.id}">
         <label>Add your new activity:</label>
         <input type="text" id="name"> <br>
         <input type="submit">
@@ -292,6 +292,34 @@ function displayItemForm(e){
 }
 
 function createItem(e){
-    
+    let newItem = {
+        name: e.target.querySelector("#name").value,
+        category_id: e.target.dataset.categoryid
+    }
 
+    let configObj = {
+        method: 'POST',
+        body: JSON.stringify(newItem),
+        headers: {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    fetch(BASE_URL + '/items', configObj)
+    .then(resp => resp.json())
+    .then(item => {
+        let itemLi = document.createElement("li")
+        let categoryList = e.path[2]
+        categoryList.appendChild(itemLi)
+
+        itemLi.innerHTML += `
+            ${item.name}
+        `
+        let addItem = document.createElement("button")
+        addItem.setAttribute("id", "itemBtn")
+        addItem.setAttribute("data-categoryId", `${item.category_id}`)
+        addItem.innerHTML = `Add Item`
+        categoryList.appendChild(addItem)
+    })
 }

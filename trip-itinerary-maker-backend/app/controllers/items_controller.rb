@@ -15,6 +15,7 @@ class ItemsController < ApplicationController
 
   # POST /items
   def create
+    binding.pry
     @item = Item.new(item_params)
     
     if @item.save
