@@ -133,21 +133,18 @@ function showTrip(e) {
             categoryList.innerHTML += `
             <h3>${category.name}<h3>
             `
-            let addItem = document.createElement("button")
-            addItem.setAttribute("id", "itemBtn")
-            addItem.setAttribute("data-categoryId", `${category.id}`)
-            addItem.innerHTML = `Add Item`
-            categoryList.appendChild(addItem)
-
             if (category.items){ 
                 category.items.forEach(item => { 
                 itemLi.innerHTML += `
                 ${item.name}
                 `
-                })  
+                })
             }
-            
-        
+            let addItem = document.createElement("button")
+            addItem.setAttribute("id", "itemBtn")
+            addItem.setAttribute("data-categoryId", `${category.id}`)
+            addItem.innerHTML = `Add Item`
+            categoryList.appendChild(addItem) 
         
         })
         addEventsToCategoryBtn()
@@ -270,6 +267,7 @@ function createCategory(e){
             addItem.innerHTML = `Add Item`
             categoryList.appendChild(addItem)
         }) 
+        addEventsToItemBtn()
     }
 }
 
@@ -318,8 +316,16 @@ function createItem(e){
         `
         let addItem = document.createElement("button")
         addItem.setAttribute("id", "itemBtn")
-        addItem.setAttribute("data-categoryId", `${item.category_id}`)
+        addItem.setAttribute("data-categoryId", `${item.category.id}`)
         addItem.innerHTML = `Add Item`
         categoryList.appendChild(addItem)
     })
+    // clearItemForm()
+    addEventsToItemBtn()
 }
+
+// function clearItemForm() {
+//     const itemForm = document.querySelector("#item-form")
+//     itemForm.parentElement.removeChild(itemForm)
+//     addEventsToItemBtn()
+// }

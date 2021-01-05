@@ -15,9 +15,9 @@ class ItemsController < ApplicationController
 
   # POST /items
   def create
-    binding.pry
+    # binding.pry
     @item = Item.new(item_params)
-    
+    # binding.pry
     if @item.save
       render json: @item, status: :created, location: @item
     else
