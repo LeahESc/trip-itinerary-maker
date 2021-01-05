@@ -28,7 +28,7 @@ class CategoriesController < ApplicationController
   # PATCH/PUT /categories/1
   def update
     if @category.update(category_params)
-      @category.trip_ids = params[:trip_ids]
+      @category.trip_ids.push(params[:trip_ids])
       render json: @category
     else
       render json: @category.errors, status: :unprocessable_entity

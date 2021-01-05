@@ -240,10 +240,7 @@ function createCategory(e){
             id: arr[0].value.id,
             trip_ids: [e.target.dataset.tripid]
         }
-        // let trip = {
-        //     destination = e.target.dataset.destination,
-        //     id = e.target.dataset.tripid
-        // }
+        
         let configObj = {
             method: 'PATCH',
             body: JSON.stringify(category),
