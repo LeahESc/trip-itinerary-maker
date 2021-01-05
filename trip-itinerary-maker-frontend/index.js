@@ -150,7 +150,7 @@ function displayCategoryForm(e){
             <label>Select from Existing:</label>
             ${categoryCheckboxes} <br>
             <label>Create a New Category:</label>
-            <input type="text" id="destination">
+            <input type="text" id="name">
             <input type="submit">
         </form>
         `
@@ -163,7 +163,7 @@ function createCategory(e){
    let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
     if (arr.length === 0){
         let newCategory = {
-            name: e.target.querySelector("#destination").value,
+            name: e.target.querySelector("#name").value,
             trip_ids: [e.target.dataset.tripid]
         }
         console.log(newCategory)

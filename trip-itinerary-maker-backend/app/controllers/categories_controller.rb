@@ -17,7 +17,7 @@ class CategoriesController < ApplicationController
   def create
     binding.pry
     @category = Category.new(category_params)
-
+    @category.trip_ids = params[:trip_ids]
     if @category.save
       render json: @category, status: :created, location: @category
     else
@@ -28,6 +28,7 @@ class CategoriesController < ApplicationController
   # PATCH/PUT /categories/1
   def update
     if @category.update(category_params)
+      @category.trip_ids = params[:trip_ids]
       render json: @category
     else
       render json: @category.errors, status: :unprocessable_entity
@@ -47,6 +48,6 @@ class CategoriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def category_params
-      params.permit(:name, trip_ids:[])
+      params.require(:category).permit(:name, trip_ids:[])
     end
 end
