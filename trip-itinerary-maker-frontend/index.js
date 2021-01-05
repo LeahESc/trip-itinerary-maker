@@ -59,6 +59,7 @@ function createTrip(e){
 }
 
 function fetchTrips(){
+    // main = ''
     fetch(BASE_URL + "/trips")
     .then(resp => resp.json())
     .then(trips => {
@@ -100,52 +101,77 @@ function showTrip(e) {
     let id = e.target.dataset.id
     let itemLi = document.createElement("li")
     let main = document.querySelector("#main")
+    let addItem = document.createElement("button")
+    addItem.setAttribute("id", "itemBtn")
+    addItem.innerHTML = `Add Item`
+
     main.innerHTML = ""
     fetch(BASE_URL + `/trips/${id}`)
     .then(resp => resp.json())
     .then(trip => {
-        console.log(trip)
+        
         main.innerHTML = `<h1>${trip.destination}</h1>`
+
         let categoryDiv = document.createElement('div')
         categoryDiv.setAttribute("id", "category-div")
         categoryDiv.setAttribute("data-tripid",`${trip.id}`)
+        categoryDiv.setAttribute("data-destination", `${trip.destination}`)
         main.appendChild(categoryDiv)
+
         let addCategory = document.createElement("button")
         addCategory.setAttribute("id", "categoryBtn")
         categoryDiv.appendChild(addCategory)
         addCategory.innerHTML = `Add Category`
-        // addCategory.addEventListener('click', displayCategoryForm)
+        categoryDiv.appendChild(addItem)
+
         trip.categories.forEach(category => {
-        main.innerHTML += `
+        let categoryList = document.createElement('div')
+        categoryList.setAttribute("id", "category-list")
+        categoryList.setAttribute("data-categoryid", `${category.id}`)
+        main.appendChild(categoryList)
+        
+        categoryList.innerHTML += `
         <h3>${category.name}<h3>
         `
+        
         if (category.items){ 
             category.items.forEach(item => { 
             itemLi.innerHTML += `
             ${item.name}
             `
-            })
+            })  
         }
-        let addItem = document.createElement("button")
-        main.appendChild(addItem)
-        addItem.setAttribute("id", "itemBtn")
-        addItem.innerHTML = `Add Item`
-        addItem.addEventListener('click', displayItemForm)
+        
+        
+        // addItem.addEventListener('click', displayItemForm)
         })
-        document.querySelector("#categoryBtn").addEventListener('click', displayCategoryForm)
-        // document.querySelector("itemBtn").addEventListener('click', displayItemForm)
+        addEventsToCategoryBtn()
+        addEventsToItemBtn()
     })
 }
 
+function addEventsToCategoryBtn(){
+    document.querySelector("#categoryBtn").addEventListener('click', displayCategoryForm)
+}
+
+function addEventsToItemBtn(){
+    document.querySelector("#itemBtn").addEventListener('click', displayItemForm)
+}
+
 function displayCategoryForm(e){ 
+    let button = document.querySelector("#categoryBtn")
     let categoryDiv = document.querySelector('#category-div')
+    categoryDiv.removeChild(button)
     let tripId = categoryDiv.dataset.tripid
+    let categoryFormDiv = document.createElement("div")
+    categoryFormDiv.setAttribute("id","c-form-div")
+    categoryDiv.appendChild(categoryFormDiv) 
     fetch(BASE_URL + '/categories')
     .then(resp => resp.json())
     .then(categories => {
         let categoryCheckboxes = categories.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
        
-        categoryDiv.innerHTML =  `
+        categoryFormDiv.innerHTML =  `
         <form id="category-form" data-tripId="${tripId}">
             <label>Select from Existing:</label>
             ${categoryCheckboxes} <br>
@@ -158,6 +184,20 @@ function displayCategoryForm(e){
     })
 }
 
+function clearCategoryForm(){ 
+    let categoryDiv = document.querySelector('#category-div')
+    let categoryFormDiv = document.querySelector('#c-form-div')
+    categoryFormDiv.parentNode.removeChild(categoryFormDiv)
+    
+    let addCategory = document.createElement("button")
+    addCategory.setAttribute("id", "categoryBtn")
+    categoryDiv.appendChild(addCategory)
+    addCategory.innerHTML = `Add Category`   
+    addEventsToCategoryBtn()
+}
+
+
+
 function createCategory(e){
     e.preventDefault()
    let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
@@ -166,7 +206,7 @@ function createCategory(e){
             name: e.target.querySelector("#name").value,
             trip_ids: [e.target.dataset.tripid]
         }
-        console.log(newCategory)
+        // console.log(newCategory)
         let configObj = {
             method: 'POST',
             body: JSON.stringify(newCategory),
@@ -179,16 +219,15 @@ function createCategory(e){
         .then(resp => resp.json())
         .then(category => {
             main.innerHTML += `
-            <h2>${category.name}</h2>
+            <h3>${category.name}</h3>
             `
-            console.log(category)
-            // let addItem = document.createElement("button")
-            // main.appendChild(addItem)
-            // addItem.setAttribute("id", "itemBtn")
-            // addItem.innerHTML = `Add Item`
-            // addItem.addEventListener('click', displayItemForm)
+            let addItemBtn = document.createElement("button")
+            main.appendChild(addItemBtn)
+            addItemBtn.setAttribute("id", "itemBtn")
+            addItemBtn.innerHTML = `Add Item`
+            addItemBtn.addEventListener('click', displayItemForm)
         }) 
-         // fetch create new category -- let the destination know it has it
+         clearCategoryForm()
     
         } 
         
@@ -200,21 +239,106 @@ function createCategory(e){
     
 }
 
-function displayItemForm(){ 
-    console.log("woohoo")
+// function displayItemForm(){ 
+//     console.log("woohoo")
+//     let itemForm = document.createElement('div')
+//     itemForm.innerHTML =  `
+//         <label>Create a New Item:</label>
+//         <input type="text" id="name">
+//         <input type="submit">
+//     `
+//     itemForm.addEventListener('submit', createItem)
+// }
+
+function displayItemForm(e){ 
+    let categoryDiv = document.querySelector('#category-div')
+    let tripId = categoryDiv.dataset.tripid
+    let tripName = categoryDiv.dataset.destination
     let itemForm = document.createElement('div')
+    itemForm.setAttribute("id", "item-form")
+    categoryDiv.appendChild(itemForm)
+    fetch(BASE_URL + '/categories')
+    .then(resp => resp.json())
+    .then(categories => {
+        let categoryCheckboxes = categories.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
+       
     itemForm.innerHTML =  `
-        <label>Create a New Item:</label>
-        <input type="text" id="name">
+     <form id="new-item-form" data-tripId="${tripId}" data-destination="${tripName}">
+        <label>Item Name:</label>
+        <input type="text" id="item-name"> <br>
+        <label>Choose from an Existing Category:</label>
+        ${categoryCheckboxes} <br>
+        <label>Create a New Category:</label>
+        <input type="text" id="category-name">
         <input type="submit">
-    `
-    itemForm.addEventListener('submit', createItem)
+     </form>
+     `
+    document.querySelector("#item-form").addEventListener('submit', createItem)
+    })
 }
 
 function createItem(e){
+    e.preventDefault()
     console.log(e.target)
-    // e.preventDefault()
+    let arr = Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
+    if (arr.length === 0){
+        let newCategory = {
+            name: e.target.querySelector("#category-name").value,
+            trip_ids: [e.target.dataset.tripid]
+        }
+    
+        let configObj = {
+            method: 'POST',
+            body: JSON.stringify(newCategory),
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        fetch(BASE_URL + '/categories', configObj)
+        .then(resp => resp.json())
+        .then(category => {
+            main.innerHTML += `
+            <h3>${category.name}</h3>
+            `
+        }) 
+        
+    
+    } else { 
+        let category = {
+            name: arr[0].value,
+            id: arr[0].value.id,
+            trip_ids: [e.target.dataset.tripid]
+        }
+        let trip = {
+            destination = e.target.dataset.destination,
+            id = e.target.dataset.tripid
+        }
+        let configObj = {
+            method: 'PATCH',
+            body: JSON.stringify(category),
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        fetch(BASE_URL + `"/categories/${category.id}"`, configObj)
+        .then(resp => resp.json())
+        .then(category => {
+            let addedCategory = category 
+            main.innerHTML += `
+            <h3>${category.name}</h3>
+            `
+        }) 
+        // fetch update destination to include this category in trip
+    }
+    let item = {
+        name: e.target.querySelector("#item-name").value,
+        // category_id: e.target
     // let category
+    }
+    }
 }
 
 

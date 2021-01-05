@@ -15,7 +15,7 @@ class CategoriesController < ApplicationController
 
   # POST /categories
   def create
-    binding.pry
+    # binding.pry
     @category = Category.new(category_params)
     @category.trip_ids = params[:trip_ids]
     if @category.save
