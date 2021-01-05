@@ -282,10 +282,12 @@ function createItem(e){
     console.log(e.target)
     let arr = Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
     if (arr.length === 0){
+
         let newCategory = {
             name: e.target.querySelector("#category-name").value,
             trip_ids: [e.target.dataset.tripid]
         }
+        
     
         let configObj = {
             method: 'POST',
@@ -296,11 +298,44 @@ function createItem(e){
             }
         }
 
+        let itemConfigObj = {
+            method: 'POST',
+            body: JSON.stringify(newItem),
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
         fetch(BASE_URL + '/categories', configObj)
         .then(resp => resp.json())
         .then(category => {
-            main.innerHTML += `
-            <h3>${category.name}</h3>
+            let categoryList = document.createElement('div')
+            categoryList.setAttribute("id", "category-list")
+            categoryList.setAttribute("data-categoryid", `${category.id}`)
+            main.appendChild(categoryList)
+            
+            categoryList.innerHTML += `
+            <h3>${category.name}<h3>
+            `
+        }) 
+
+        let newItem = {
+            name: e.target.querySelector("#item-name"),
+            category_name: newCategory.name
+
+        }
+
+        fetch(BASE_URL + '/items', itemConfigObj)
+        .then(resp => resp.json())
+        .then(item => {
+            let categoryList = document.createElement('div')
+            categoryList.setAttribute("id", "category-list")
+            categoryList.setAttribute("data-categoryid", `${category.id}`)
+            main.appendChild(categoryList)
+            
+            categoryList.innerHTML += `
+            <h3>${category.name}<h3>
             `
         }) 
         
