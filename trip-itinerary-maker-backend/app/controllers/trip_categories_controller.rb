@@ -4,13 +4,14 @@ class TripCategoriesController < ApplicationController
         render json: @tripcategories
     end 
     def create
-        binding.pry
-        @trip_category = TripCategory.new(trip_category_params)
+        # binding.pry
+        trip_category = TripCategory.new(trip_category_params)
        
-        if @category.save
+        if trip_category.save
+            @category = Category.find(trip_category.category_id)
           render json: @category, status: :created, location: @category
         else
-          render json: @category.errors, status: :unprocessable_entity
+          render json: @trip_category.errors, status: :unprocessable_entity
         end
       end
 
