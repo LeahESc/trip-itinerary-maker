@@ -235,30 +235,29 @@ function createCategory(e){
          clearCategoryForm()
     
     } else { 
-        let updateCategory = {
-            name: arr[0].value,
-            id: arr[0].id,
-            trip_ids: [e.target.dataset.tripid]
+        let newTripCategory = {
+            trip_id: e.target.dataset.tripid,
+            category_id: arr[0].id
         }
 
         let configObj = {
-            method: 'PATCH',
+            method: 'POST',
             body: JSON.stringify(updateCategory),
             headers: {
                 'Content-type': 'application/json',
                 'Accept': 'application/json'
             }
         }
-        fetch(BASE_URL + `/categories/${updateCategory.id}`, configObj)
+        fetch(BASE_URL + `/trip_categories`, configObj)
         .then(resp => resp.json())
-        .then(category => {
+        .then(tc => {
             let categoryList = document.createElement('div')
-            categoryList.setAttribute("id", `${category.id}`)
+            categoryList.setAttribute("id", `${tc.category_id}`)
             
             main.appendChild(categoryList)
             
             categoryList.innerHTML += `
-            <h3>${category.name}<h3>
+            <h3>${tc.category_id}<h3>
             `
             let addItem = document.createElement("button")
             addItem.setAttribute("id", "itemBtn")
