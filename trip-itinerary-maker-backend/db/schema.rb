@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2021_01_04_164739) do
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.integer "category_id"
+    t.integer "trip_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

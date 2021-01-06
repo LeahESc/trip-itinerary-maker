@@ -3,6 +3,7 @@ class CreateItems < ActiveRecord::Migration[6.0]
     create_table :items do |t|
       t.string :name
       t.integer :category_id
+      t.integer :trip_id
       t.timestamps
     end
   end

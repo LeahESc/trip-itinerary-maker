@@ -58,10 +58,7 @@ function createTrip(e){
    
 }
 
-// function readyToFetch(){
-//     main.innerHTML = ''
-//     fetchTrips()
-// }
+
 function fetchTrips(){
     main.innerHTML = ''
     fetch(BASE_URL + "/trips")
@@ -103,7 +100,7 @@ function attachClicksToButtons() {
 function showTrip(e) { 
     // console.log(e.target)
     let id = e.target.dataset.id
-    let itemLi = document.createElement("li")
+    
     let main = document.querySelector("#main")
     
 
@@ -128,20 +125,21 @@ function showTrip(e) {
 
         trip.categories.forEach(category => {
             let categoryList = document.createElement('div')
-        
             categoryList.setAttribute("id", `${category.id}`)
-            
             main.appendChild(categoryList)
             
-            
+
             categoryList.innerHTML += `
             <h3>${category.name}<h3>
             `
             if (category.items){ 
-                category.items.forEach(item => { 
-                itemLi.innerHTML += `
-                ${item.name}
-                `
+                category.items.filter(item => item.trip_id === trip.id).forEach(item => { 
+                    let itemLi = document.createElement("li")
+                    categoryList.appendChild(itemLi)
+                    itemLi.innerHTML += `
+                    ${item.name}
+                    `
+                
                 })
             }
             let addItem = document.createElement("button")
@@ -166,9 +164,9 @@ function addEventsToItemBtn(){
 }
 
 function displayCategoryForm(e){ 
-    let button = document.querySelector("#categoryBtn")
+    let categoryButton = document.querySelector("#categoryBtn")
     let categoryDiv = document.querySelector('#category-div')
-    categoryDiv.removeChild(button)
+    categoryDiv.removeChild(categoryButton)
     let tripId = categoryDiv.dataset.tripid
     let categoryFormDiv = document.createElement("div")
     categoryFormDiv.setAttribute("id","c-form-div")
@@ -290,13 +288,20 @@ function displayItemForm(e){
         <input type="submit">
      </form>
      `
+    addItemSubmitEventListener() 
+}
+
+function addItemSubmitEventListener(){
     document.querySelector("#item-form").addEventListener('submit', createItem)
 }
 
 function createItem(e){
+    let tripId = document.querySelector("#category-div").dataset.tripid
+    
     let newItem = {
         name: e.target.querySelector("#name").value,
-        category_id: e.target.dataset.categoryid
+        category_id: e.target.dataset.categoryid,
+        trip_id: tripId
     }
 
     let configObj = {
