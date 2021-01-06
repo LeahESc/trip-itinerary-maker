@@ -78,16 +78,10 @@ function createTrip(e){
     fetch(BASE_URL + '/trips', configObj)
     .then(resp => resp.json())
     .then(trip => {
-        const trip = new Trip(trip)
-        main.innerHTML += newTrip.renderTrip()
-        
-        let view = document.createElement("button")
-        view.setAttribute("id", "viewBtn")
-        view.setAttribute("data-id", `${trip.id}`)
-        view.innerHTML = `
-        View full Itinerary
-        `
-        main.appendChild(view)
+        const createdTrip = new Trip(trip)
+        main.innerHTML += createdTrip.renderTrip()
+        createdTrip.renderViewButton()
+   
         attachClicksToButtons()
         clearForm()
     })
@@ -102,8 +96,6 @@ function attachClicksToButtons() {
 }
 
 function showTrip(e) { 
-    // const trip = await apiService.fetchTrip()
-    // console.log(e.target)
     let id = e.target.dataset.id
     main.innerHTML = ""
     fetch(BASE_URL + `/trips/${id}`)

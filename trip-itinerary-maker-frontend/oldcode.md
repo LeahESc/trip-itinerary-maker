@@ -28,3 +28,18 @@
 //     })
     
 // }
+
+
+ --- old show trip 
+     // const trip = await apiService.fetchTrip()
+    // console.log(e.target)
+
+--- old adding view itinerary button
+
+         // let view = document.createElement("button")
+        // view.setAttribute("id", "viewBtn")
+        // view.setAttribute("data-id", `${this.id}`)
+        // view.innerHTML = `
+        // View full Itinerary
+        // `
+        // main.appendChild(view)
