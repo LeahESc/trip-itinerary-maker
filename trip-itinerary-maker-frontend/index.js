@@ -59,7 +59,7 @@ function createTrip(e){
 }
 
 function fetchTrips(){
-    // main = ''
+    main.innerHTML += ''
     fetch(BASE_URL + "/trips")
     .then(resp => resp.json())
     .then(trips => {
@@ -319,13 +319,15 @@ function createItem(e){
         addItem.setAttribute("data-categoryId", `${item.category.id}`)
         addItem.innerHTML = `Add Item`
         categoryList.appendChild(addItem)
+        addEventsToItemBtn()
+        clearItemForm()
+        // addEventsToItemBtn()
     })
-    // clearItemForm()
-    addEventsToItemBtn()
+    
+    
 }
 
-// function clearItemForm() {
-//     const itemForm = document.querySelector("#item-form")
-//     itemForm.parentElement.removeChild(itemForm)
-//     addEventsToItemBtn()
-// }
+function clearItemForm() {
+    const itemForm = document.querySelector("#item-form")
+    itemForm.innerHTML = " "
+}

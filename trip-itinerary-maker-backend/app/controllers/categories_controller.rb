@@ -15,8 +15,8 @@ class CategoriesController < ApplicationController
 
   # POST /categories
   def create
-    # binding.pry
-    @category = Category.find_or_create_by(category_params[:name])
+    binding.pry
+    @category = Category.new(category_params)
     @category.trip_ids = params[:trip_ids]
     if @category.save
       render json: @category, status: :created, location: @category
