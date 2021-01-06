@@ -4,7 +4,7 @@
 //     getTrips()
 // })
 
-const apiService = new ApiService()
+// const apiService = new ApiService()
 const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
 let  main = document.querySelector("#main")
@@ -26,21 +26,9 @@ function renderTrips() {
         .then(trips => {
             trips.map(trip => {
             const newTrip = new Trip(trip)
+            newTrip.renderTrip()
+            newTrip.renderViewButton()
 
-            main.innerHTML += newTrip.renderTrip()
-            newTrip.categories.forEach(category => {
-                main.innerHTML += `
-                <li>${category.name}</li>
-                `
-            })
-          
-            let view = document.createElement("button")
-            view.setAttribute("id", "viewBtn")
-            view.setAttribute("data-id", `${newTrip.id}`)
-            view.innerHTML = `
-            View full Itinerary
-            `
-            main.appendChild(view)
             attachClicksToButtons()
         })
     }) 
@@ -79,7 +67,7 @@ function createTrip(e){
     .then(resp => resp.json())
     .then(trip => {
         const createdTrip = new Trip(trip)
-        main.innerHTML += createdTrip.renderTrip()
+        main.innerHTML += createdTrip.renderNewTrip()
         createdTrip.renderViewButton()
    
         attachClicksToButtons()
@@ -101,7 +89,6 @@ function showTrip(e) {
     fetch(BASE_URL + `/trips/${id}`)
     .then(resp => resp.json())
     .then(trip => {
-        
         main.innerHTML = `<h1>${trip.destination}</h1>`
 
         let categoryDiv = document.createElement('div')
@@ -117,30 +104,8 @@ function showTrip(e) {
         
 
         trip.categories.forEach(category => {
-            let categoryList = document.createElement('div')
-            categoryList.setAttribute("id", `${category.id}`)
-            main.appendChild(categoryList)
-            
-
-            categoryList.innerHTML += `
-            <h3>${category.name}<h3>
-            `
-            if (category.items){ 
-                category.items.filter(item => item.trip_id === trip.id).forEach(item => { 
-                    let itemLi = document.createElement("li")
-                    categoryList.appendChild(itemLi)
-                    itemLi.innerHTML += `
-                    ${item.name}  <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
-                    `
-                
-                })
-            }
-            let addItem = document.createElement("button")
-            addItem.setAttribute("id", "itemBtn")
-            addItem.setAttribute("data-categoryId", `${category.id}`)
-            addItem.innerHTML = `Add Item`
-            categoryList.appendChild(addItem) 
-        
+            let newCategory = new Category(category)
+            newCategory.renderCategory(trip.id)
         })
         addEventsToCategoryBtn()
         addEventsToItemBtn()
@@ -173,7 +138,7 @@ function displayCategoryForm(e){
     .then(resp => resp.json())
     .then(categories => {
         let categoryCheckboxes = categories.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
-       
+        
         categoryFormDiv.innerHTML =  `
         <form id="category-form" data-tripId="${tripId}">
             <label>Select from Existing:</label>
@@ -220,19 +185,19 @@ function createCategory(e){
         fetch(BASE_URL + '/categories', configObj)
         .then(resp => resp.json())
         .then(category => {
-            let categoryList = document.createElement('div')
-            categoryList.setAttribute("id", `${category.id}`)
+            const newCategory = new Category(category)
+            newCategory.renderCategory()
+            // let categoryList = document.createElement('div')
+            // categoryList.setAttribute("id", `${newCategory.id}`)
             
-            main.appendChild(categoryList)
-            categoryList.innerHTML += `
-            <h3>${category.name}</h3>
-            `
-            let addItemBtn = document.createElement("button")
-            // main.appendChild(addItemBtn)
-            addItemBtn.setAttribute("id", "itemBtn")
-            addItemBtn.setAttribute("data-categoryId", `${category.id}`)
-            addItemBtn.innerHTML = `Add Item`
-            categoryList.appendChild(addItemBtn)
+            // main.appendChild(categoryList)
+            // categoryList.innerHTML += newCategory.renderCategory()
+
+            // let addItemBtn = document.createElement("button")
+            // addItemBtn.setAttribute("data-categoryId", `${category.id}`)
+            // addItemBtn.innerHTML = `Add Item`
+            // addItem.setAttribute("id", "itemBtn")
+            // categoryList.appendChild(button)
             addEventsToItemBtn()
         }) 
          clearCategoryForm()
@@ -339,6 +304,7 @@ function createItem(e){
         clearItemForm()
     })  
 }
+
 function removeItem(e){
     let configObj = {
         method: 'DELETE',

@@ -6,9 +6,18 @@ class Trip {
     }
 
     renderTrip(){
-        return `
+        main.innerHTML += `
         <h2>${this.destination}</h2>
         `
+        this.categories.forEach(category => {
+            main.innerHTML += `
+            <li>${category.name}</li>
+            `
+        })
+    }
+
+    renderNewTrip(){
+        return `<h2>${this.destination}</h2>`
     }
 
     renderViewButton(){
