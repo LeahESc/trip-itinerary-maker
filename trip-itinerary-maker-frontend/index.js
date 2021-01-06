@@ -327,8 +327,10 @@ function createItem(e){
 
         itemLi.innerHTML += `
             ${item.name}
-            <button id ="removeItem"> Remove Item </button>
+            <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
         `
+        let removeButtons = document.querySelectorAll("#removeItem")
+        removeButtons.filter( button => button.dataset.id === `${item.id}`).addEventListener('click', removeItem)
         let addItem = document.createElement("button")
         addItem.setAttribute("id", "itemBtn")
         addItem.setAttribute("data-categoryId", `${item.category.id}`)
@@ -338,7 +340,16 @@ function createItem(e){
         clearItemForm()
     })  
 }
-
+function removeItem(e){
+    let configObj = {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    fetch(BASE_URL + '/items/e.target.dataset.id', configObj)
+}
 function clearItemForm() {
     const itemForm = document.querySelector("#item-form")
     itemForm.parentElement.removeChild(itemForm)
