@@ -4,6 +4,8 @@ class ApiService{
     }
 
     async fetchTrips(){
-        let res = await 
+        let resp = await fetch(this.baseUrl + '/trips')
+        let data = await resp.json()
+        return data 
     }
 }

@@ -1,15 +1,51 @@
-const BASE_URL = "http://localhost:3000"
+// document.addEventListener("DOMContentLoaded", () => {
+//     document.getElementById("new-trip").addEventListener('click', displayTripForm)
+//     document.getElementById("trips").addEventListener('click', getTrips)
+//     getTrips()
+// })
+
+const apiService = new ApiService()
+const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
-let main = document.querySelector("#main")
+let  main = document.querySelector("#main")
 
+const init = () => {
+    bindEventListeners()
+    renderTrips()
+}
 
-document.addEventListener("DOMContentLoaded", () => {
+function bindEventListeners(){
     document.getElementById("new-trip").addEventListener('click', displayTripForm)
-    document.getElementById("trips").addEventListener('click', fetchTrips)
-    fetchTrips()
+    document.getElementById("trips").addEventListener('click', renderTrips)
+}
 
-})
+function renderTrips() { 
+    main.innerHTML = ''
+        fetch(BASE_URL + "/trips")
+        .then(resp => resp.json())
+        .then(trips => {
+            trips.map(trip => {
+            const newTrip = new Trip(trip)
 
+            main.innerHTML += newTrip.renderTrip()
+            newTrip.categories.forEach(category => {
+                main.innerHTML += `
+                <li>${category.name}</li>
+                `
+            })
+          
+            let view = document.createElement("button")
+            view.setAttribute("id", "viewBtn")
+            view.setAttribute("data-id", `${newTrip.id}`)
+            view.innerHTML = `
+            View full Itinerary
+            `
+            main.appendChild(view)
+            attachClicksToButtons()
+        })
+    }) 
+}
+  
 function displayTripForm(){
     let html = `
     <form>
@@ -42,9 +78,9 @@ function createTrip(e){
     fetch(BASE_URL + '/trips', configObj)
     .then(resp => resp.json())
     .then(trip => {
-        main.innerHTML += `
-        <h2>${trip.destination}</h2>
-        `
+        const trip = new Trip(trip)
+        main.innerHTML += newTrip.renderTrip()
+        
         let view = document.createElement("button")
         view.setAttribute("id", "viewBtn")
         view.setAttribute("data-id", `${trip.id}`)
@@ -58,38 +94,6 @@ function createTrip(e){
    
 }
 
-
-function fetchTrips(){
-    main.innerHTML = ''
-    fetch(BASE_URL + "/trips")
-    .then(resp => resp.json())
-    .then(trips => {
-        showTrips(trips)
-    })
-}
-
-function showTrips(trips) { 
-    trips.map(trip => {
-        main.innerHTML += `
-        <h2>${trip.destination}</h2>
-        `
-        trip.categories.forEach(category => {
-            main.innerHTML += `
-            <li>${category.name}</li>
-            `
-        })
-        let view = document.createElement("button")
-        view.setAttribute("id", "viewBtn")
-        view.setAttribute("data-id", `${trip.id}`)
-        view.innerHTML = `
-        View full Itinerary
-        `
-        main.appendChild(view)
-        attachClicksToButtons()
-    })
-    
-}
-
 function attachClicksToButtons() {
     const viewButtons = document.querySelectorAll("#viewBtn")
     viewButtons.forEach(button => { 
@@ -98,12 +102,9 @@ function attachClicksToButtons() {
 }
 
 function showTrip(e) { 
+    // const trip = await apiService.fetchTrip()
     // console.log(e.target)
     let id = e.target.dataset.id
-    
-    let main = document.querySelector("#main")
-    
-
     main.innerHTML = ""
     fetch(BASE_URL + `/trips/${id}`)
     .then(resp => resp.json())
@@ -365,3 +366,4 @@ function clearItemForm() {
     itemForm.parentElement.removeChild(itemForm)
 }
 
+init()
