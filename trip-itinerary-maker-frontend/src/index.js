@@ -137,7 +137,7 @@ function showTrip(e) {
                     let itemLi = document.createElement("li")
                     categoryList.appendChild(itemLi)
                     itemLi.innerHTML += `
-                    ${item.name}
+                    ${item.name}  <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
                     `
                 
                 })
@@ -151,6 +151,7 @@ function showTrip(e) {
         })
         addEventsToCategoryBtn()
         addEventsToItemBtn()
+        addEventsToRemoveItemBtn()
     })
 }
 
@@ -161,6 +162,10 @@ function addEventsToCategoryBtn(){
 function addEventsToItemBtn(){
     const itemButtons = document.querySelectorAll("#itemBtn")
     itemButtons.forEach(button => button.addEventListener('click', displayItemForm))
+}
+
+function addEventsToRemoveItemBtn(){
+    document.querySelectorAll("#removeItem").forEach(button => button.addEventListener('click', removeItem))
 }
 
 function displayCategoryForm(e){ 
@@ -330,13 +335,14 @@ function createItem(e){
             <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
         `
         let removeButtons = document.querySelectorAll("#removeItem")
-        removeButtons.filter( button => button.dataset.id === `${item.id}`).addEventListener('click', removeItem)
+        removeButtons.filter( button => button.dataset.id === `${item.id}`)
         let addItem = document.createElement("button")
         addItem.setAttribute("id", "itemBtn")
         addItem.setAttribute("data-categoryId", `${item.category.id}`)
         addItem.innerHTML = `Add Item`
         categoryList.appendChild(addItem)
         addEventsToItemBtn()
+        addEventsToRemoveItemBtn()
         clearItemForm()
     })  
 }
@@ -348,11 +354,14 @@ function removeItem(e){
             'Accept': 'application/json'
         }
     }
-    fetch(BASE_URL + '/items/e.target.dataset.id', configObj)
+    fetch(BASE_URL + `/items/${e.target.dataset.id}`, configObj)
+    .then(() => {
+        fetchTrips()
+    })
 }
+
 function clearItemForm() {
     const itemForm = document.querySelector("#item-form")
     itemForm.parentElement.removeChild(itemForm)
-    // itemForm.innerHTML = " "
 }
 
