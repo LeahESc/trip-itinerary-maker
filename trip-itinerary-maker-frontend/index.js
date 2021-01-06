@@ -23,7 +23,7 @@ function displayTripForm(){
 }
 
 function clearForm() {
-    formDiv = ""
+    formDiv.innerHTML = ""
 }
 
 function createTrip(e){
@@ -202,7 +202,6 @@ function clearCategoryForm(){
 }
 
 
-
 function createCategory(e){
     e.preventDefault()
    let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
@@ -231,10 +230,12 @@ function createCategory(e){
             <h3>${category.name}</h3>
             `
             let addItemBtn = document.createElement("button")
-            main.appendChild(addItemBtn)
+            // main.appendChild(addItemBtn)
             addItemBtn.setAttribute("id", "itemBtn")
+            addItemBtn.setAttribute("data-categoryId", `${category.id}`)
             addItemBtn.innerHTML = `Add Item`
-            addItemBtn.addEventListener('click', displayItemForm)
+            categoryList.appendChild(addItemBtn)
+            addEventsToItemBtn()
         }) 
          clearCategoryForm()
     
@@ -263,37 +264,41 @@ function createCategory(e){
             categoryList.innerHTML += `
             <h3>${category.name}<h3>
             `
-            let addItem = document.createElement("button")
-            addItem.setAttribute("id", "itemBtn")
-            addItem.setAttribute("data-categoryId", `${category.id}`)
-            addItem.innerHTML = `Add Item`
-            categoryList.appendChild(addItem)
+            let addItemBtn = document.createElement("button")
+            addItemBtn.setAttribute("id", "itemBtn")
+            addItemBtn.innerHTML = `Add Item`
+            categoryList.appendChild(addItemBtn)
+            addItemBtn.setAttribute("data-categoryId", `${addItemBtn.parentElement.id}`)
+            addEventsToItemBtn()
+           
         }) 
-        addEventsToItemBtn()
+        clearCategoryForm()   
     }
 }
 
+
 function displayItemForm(e){ 
     let itemBtn = e.target
-    let catDiv = itemBtn.parentNode
-    catDiv.removeChild(itemBtn)
+    let parent = itemBtn.parentNode
+    let categoryId = parent.id
+    parent.removeChild(itemBtn)
     let itemForm = document.createElement('div')
     itemForm.setAttribute("id", "item-form")
-    catDiv.appendChild(itemForm)
+    parent.appendChild(itemForm)
 
     itemForm.innerHTML =  `
-     <form id="new-item-form" data-categoryId="${catDiv.id}">
+     <form id="new-item-form" data-categoryId="${categoryId}">
         <label>Add your new activity:</label>
         <input type="text" id="name"> <br>
         <input type="submit">
      </form>
      `
-    addItemSubmitEventListener() 
+    document.querySelector("#item-form").addEventListener('submit', createItem) 
 }
 
-function addItemSubmitEventListener(){
-    document.querySelector("#item-form").addEventListener('submit', createItem)
-}
+// function addItemSubmitEventListener(){
+    
+// }
 
 function createItem(e){
     let tripId = document.querySelector("#category-div").dataset.tripid
@@ -322,6 +327,7 @@ function createItem(e){
 
         itemLi.innerHTML += `
             ${item.name}
+            <button id ="removeItem"> Remove Item </button>
         `
         let addItem = document.createElement("button")
         addItem.setAttribute("id", "itemBtn")
@@ -330,13 +336,12 @@ function createItem(e){
         categoryList.appendChild(addItem)
         addEventsToItemBtn()
         clearItemForm()
-        // addEventsToItemBtn()
-    })
-    
-    
+    })  
 }
 
 function clearItemForm() {
     const itemForm = document.querySelector("#item-form")
-    itemForm.innerHTML = " "
+    itemForm.parentElement.removeChild(itemForm)
+    // itemForm.innerHTML = " "
 }
+
