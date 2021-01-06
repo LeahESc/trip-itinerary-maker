@@ -58,8 +58,12 @@ function createTrip(e){
    
 }
 
+// function readyToFetch(){
+//     main.innerHTML = ''
+//     fetchTrips()
+// }
 function fetchTrips(){
-    main.innerHTML += ''
+    main.innerHTML = ''
     fetch(BASE_URL + "/trips")
     .then(resp => resp.json())
     .then(trips => {
