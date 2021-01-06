@@ -1,10 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     document.getElementById("new-trip").addEventListener('click', displayTripForm)
-//     document.getElementById("trips").addEventListener('click', getTrips)
-//     getTrips()
-// })
-
-// const apiService = new ApiService()
 const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
 let  main = document.querySelector("#main")
@@ -72,8 +65,7 @@ function createTrip(e){
    
         attachClicksToButtons()
         clearForm()
-    })
-   
+    })  
 }
 
 function attachClicksToButtons() {
@@ -89,23 +81,11 @@ function showTrip(e) {
     fetch(BASE_URL + `/trips/${id}`)
     .then(resp => resp.json())
     .then(trip => {
-        main.innerHTML = `<h1>${trip.destination}</h1>`
-
-        let categoryDiv = document.createElement('div')
-        categoryDiv.setAttribute("id", "category-div")
-        categoryDiv.setAttribute("data-tripid",`${trip.id}`)
-        categoryDiv.setAttribute("data-destination", `${trip.destination}`)
-        main.appendChild(categoryDiv)
-
-        let addCategory = document.createElement("button")
-        addCategory.setAttribute("id", "categoryBtn")
-        categoryDiv.appendChild(addCategory)
-        addCategory.innerHTML = `Add Category`
-        
-
-        trip.categories.forEach(category => {
+        let showTrip = new Trip(trip)
+        showTrip.displayTrip()
+        showTrip.categories.forEach(category => {
             let newCategory = new Category(category)
-            newCategory.renderCategory(trip.id)
+            newCategory.renderCategory(showTrip.id)
         })
         addEventsToCategoryBtn()
         addEventsToItemBtn()
@@ -134,6 +114,7 @@ function displayCategoryForm(e){
     let categoryFormDiv = document.createElement("div")
     categoryFormDiv.setAttribute("id","c-form-div")
     categoryDiv.appendChild(categoryFormDiv) 
+    
     fetch(BASE_URL + '/categories')
     .then(resp => resp.json())
     .then(categories => {
@@ -173,7 +154,6 @@ function createCategory(e){
             name: e.target.querySelector("#name").value,
             trip_ids: [e.target.dataset.tripid]
         }
-        // console.log(newCategory)
         let configObj = {
             method: 'POST',
             body: JSON.stringify(newCategory),
@@ -187,21 +167,9 @@ function createCategory(e){
         .then(category => {
             const newCategory = new Category(category)
             newCategory.renderCategory()
-            // let categoryList = document.createElement('div')
-            // categoryList.setAttribute("id", `${newCategory.id}`)
-            
-            // main.appendChild(categoryList)
-            // categoryList.innerHTML += newCategory.renderCategory()
-
-            // let addItemBtn = document.createElement("button")
-            // addItemBtn.setAttribute("data-categoryId", `${category.id}`)
-            // addItemBtn.innerHTML = `Add Item`
-            // addItem.setAttribute("id", "itemBtn")
-            // categoryList.appendChild(button)
             addEventsToItemBtn()
         }) 
-         clearCategoryForm()
-    
+         clearCategoryForm()    
     } else { 
         let newTripCategory = {
             trip_id: e.target.dataset.tripid,
@@ -219,26 +187,13 @@ function createCategory(e){
         fetch(BASE_URL + `/trip_categories`, configObj)
         .then(resp => resp.json())
         .then(category => {
-            let categoryList = document.createElement('div')
-            categoryList.setAttribute("id", `${category.id}`)
-            
-            main.appendChild(categoryList)
-            
-            categoryList.innerHTML += `
-            <h3>${category.name}<h3>
-            `
-            let addItemBtn = document.createElement("button")
-            addItemBtn.setAttribute("id", "itemBtn")
-            addItemBtn.innerHTML = `Add Item`
-            categoryList.appendChild(addItemBtn)
-            addItemBtn.setAttribute("data-categoryId", `${addItemBtn.parentElement.id}`)
-            addEventsToItemBtn()
-           
+            let newTripCategory = new TripCategory(category)
+            newTripCategory.renderTripCategory()
+            addEventsToItemBtn()    
         }) 
         clearCategoryForm()   
     }
 }
-
 
 function displayItemForm(e){ 
     let itemBtn = e.target
@@ -258,10 +213,6 @@ function displayItemForm(e){
      `
     document.querySelector("#item-form").addEventListener('submit', createItem) 
 }
-
-// function addItemSubmitEventListener(){
-    
-// }
 
 function createItem(e){
     let tripId = document.querySelector("#category-div").dataset.tripid
@@ -284,21 +235,21 @@ function createItem(e){
     fetch(BASE_URL + '/items', configObj)
     .then(resp => resp.json())
     .then(item => {
-        let itemLi = document.createElement("li")
-        let categoryList = e.path[2]
-        categoryList.appendChild(itemLi)
+        let newItem = new Item(item)
+        newItem.renderItem(e) 
+        // let itemLi = document.createElement("li")
+        // let categoryList = e.path[2]
+        // categoryList.appendChild(itemLi)
 
-        itemLi.innerHTML += `
-            ${item.name}
-            <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
-        `
-        let removeButtons = document.querySelectorAll("#removeItem")
-        removeButtons.filter( button => button.dataset.id === `${item.id}`)
-        let addItem = document.createElement("button")
-        addItem.setAttribute("id", "itemBtn")
-        addItem.setAttribute("data-categoryId", `${item.category.id}`)
-        addItem.innerHTML = `Add Item`
-        categoryList.appendChild(addItem)
+        // itemLi.innerHTML += `
+        //     ${item.name}
+        //     <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
+        // `
+        // let addItem = document.createElement("button")
+        // addItem.setAttribute("id", "itemBtn")
+        // addItem.setAttribute("data-categoryId", `${item.category.id}`)
+        // addItem.innerHTML = `Add Item`
+        // categoryList.appendChild(addItem)
         addEventsToItemBtn()
         addEventsToRemoveItemBtn()
         clearItemForm()
@@ -315,7 +266,7 @@ function removeItem(e){
     }
     fetch(BASE_URL + `/items/${e.target.dataset.id}`, configObj)
     .then(() => {
-        fetchTrips()
+        renderTrips()
     })
 }
 
