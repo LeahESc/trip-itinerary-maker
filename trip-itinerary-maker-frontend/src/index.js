@@ -1,5 +1,4 @@
 const apiService = new ApiService()
-// const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
 let  main = document.querySelector("#main")
 
@@ -180,10 +179,11 @@ function displayItemForm(e){
     itemForm.innerHTML =  `
      <form id="new-item-form" data-categoryId="${categoryId}">
         <label>Add your new activity:</label>
-        <input type="text" id="name"> <br>
+            <input type="text" id="name"> <br>
         <input type="submit">
      </form>
      `
+
     document.querySelector("#item-form").addEventListener('submit', createNewItem) 
 }
 

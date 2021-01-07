@@ -34,7 +34,7 @@ class Category {
         let addItem = document.createElement("button")
         addItem.setAttribute("id", "itemBtn")
         addItem.setAttribute("data-categoryId", `${this.id}`)
-        addItem.setAttribute("class", "btn btn-outline-secondary btn-lg")
+        addItem.setAttribute("class", "btn btn-outline-secondary btn-sm")
         addItem.innerHTML = `Add Item`
         categoryList.appendChild(addItem) 
     }
