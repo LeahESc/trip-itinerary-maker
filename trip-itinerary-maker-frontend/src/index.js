@@ -134,6 +134,7 @@ function clearCategoryForm(){
     let addCategory = document.createElement("button")
     addCategory.setAttribute("id", "categoryBtn")
     categoryDiv.appendChild(addCategory)
+    addCategory.setAttribute("class", "btn btn-secondary")
     addCategory.innerHTML = `Add Category`   
     addEventsToCategoryBtn()
 }

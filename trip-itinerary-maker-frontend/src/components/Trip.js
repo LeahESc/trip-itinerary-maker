@@ -8,6 +8,7 @@ class Trip {
     renderTrip(){
         main.innerHTML += `
         <h2>${this.destination}</h2>
+        </div>
         `
         this.categories.forEach(category => {
             main.innerHTML += `
@@ -26,14 +27,13 @@ class Trip {
         let categoryDiv = document.createElement('div')
         categoryDiv.setAttribute("id", "category-div")
         categoryDiv.setAttribute("data-tripid",`${this.id}`)
-        // categoryDiv.setAttribute("data-destination", `${trip.destination}`)
         main.appendChild(categoryDiv)
 
         let addCategory = document.createElement("button")
         addCategory.setAttribute("id", "categoryBtn")
+        addCategory.setAttribute("class", "btn btn-secondary")
         categoryDiv.appendChild(addCategory)
         addCategory.innerHTML = `Add Category`
-        
     }
 
     renderButtons(){

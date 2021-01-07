@@ -16,6 +16,13 @@ body {
     margin-left: 10px;
 }
 
+#categoryBtn{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%
+}
+
 body, input{
     font-family: 'Source Sans Pro';
     font-weight: 300;
@@ -62,6 +69,15 @@ h4 {
    font-size: 1.25em;
    letter-spacing: 2px;
    margin: 0 0 1.25em 0;
+}
+
+li {
+    font-family: 'Source Sans Pro';
+    font-weight: 300;
+    color: #777;
+    font-size: 1em;
+    letter-spacing: 2px;
+    margin: 0 0 1.25em 0;
 }
 
 h4 a {
