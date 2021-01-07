@@ -19,8 +19,8 @@ async function renderTrips() {
     trips.map(t => {
     const trip = new Trip(t)
     trip.renderTrip()
-    trip.renderViewButton()
-
+    trip.renderButtons()
+    
     attachClicksToButtons()
     })   
 }
@@ -49,17 +49,26 @@ async function createTrip(e){
     const data = await apiService.createNewTrip(trip) 
     const newTrip = new Trip(data)
     main.innerHTML += newTrip.renderNewTrip()
-    newTrip.renderViewButton()
-
+    newTrip.renderButtons()
     attachClicksToButtons()
     clearForm() 
 }
 
 function attachClicksToButtons() {
     const viewButtons = document.querySelectorAll("#viewBtn")
+    const deleteButtons = document.querySelectorAll("#deleteBtn")
     viewButtons.forEach(button => { 
         button.addEventListener('click', showTrip)
     })
+    deleteButtons.forEach(button => { 
+        button.addEventListener('click', removeTrip)
+    })
+}
+
+async function removeTrip(e){
+    const id = e.target.dataset.id
+    await apiService.deleteTrip(id) 
+    renderTrips()
 }
 
 async function showTrip(e) { 

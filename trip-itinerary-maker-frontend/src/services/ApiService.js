@@ -90,5 +90,15 @@ class ApiService {
         // return data
     }
 
+    async deleteTrip(id){
+        let configObj = {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let resp = await fetch(this.baseURL + `/trips/${id}`, configObj)
+    }
 
 }

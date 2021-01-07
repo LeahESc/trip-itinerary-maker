@@ -36,7 +36,7 @@ class Trip {
         
     }
 
-    renderViewButton(){
+    renderButtons(){
         let view = document.createElement("button")
         view.setAttribute("id", "viewBtn")
         view.setAttribute("data-id", `${this.id}`)
@@ -44,5 +44,13 @@ class Trip {
         View full Itinerary
         `
         main.appendChild(view)
+        
+        let remove = document.createElement("button")
+        remove.setAttribute("id", "deleteBtn")
+        remove.setAttribute("data-id", `${this.id}`)
+        remove.innerHTML = `
+        Remove This Trip
+        `
+        main.appendChild(remove)
     }
 }
