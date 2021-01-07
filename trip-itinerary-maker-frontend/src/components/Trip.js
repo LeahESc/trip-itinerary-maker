@@ -40,6 +40,7 @@ class Trip {
         let view = document.createElement("button")
         view.setAttribute("id", "viewBtn")
         view.setAttribute("data-id", `${this.id}`)
+        view.setAttribute("class", "btn btn-secondary")
         view.innerHTML = `
         View full Itinerary
         `
@@ -48,6 +49,7 @@ class Trip {
         let remove = document.createElement("button")
         remove.setAttribute("id", "deleteBtn")
         remove.setAttribute("data-id", `${this.id}`)
+        remove.setAttribute("class", "btn btn-secondary")
         remove.innerHTML = `
         Remove This Trip
         `

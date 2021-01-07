@@ -13,11 +13,12 @@ class Item {
 
         itemLi.innerHTML += `
              ${this.name}
-             <button id ="removeItem" data-id="${this.id}"> Remove Item </button>
+             <button class="btn btn-outline-secondary btn-sm" id="removeItem" data-id="${this.id}"> Remove Item </button>
          `
          let addItem = document.createElement("button")
          addItem.setAttribute("id", "itemBtn")
          addItem.setAttribute("data-categoryId", `${this.category_id}`)
+
          addItem.innerHTML = `Add Item`
          categoryList.appendChild(addItem)
     }
