@@ -138,45 +138,22 @@ async function createCategory(e){
             name: e.target.querySelector("#name").value,
             trip_ids: [e.target.dataset.tripid]
         }
-        // let configObj = {
-        //     method: 'POST',
-        //     body: JSON.stringify(newCategory),
-        //     headers: {
-        //         'Content-type': 'application/json',
-        //         'Accept': 'application/json'
-        //     }
-        // }
-        // fetch(BASE_URL + '/categories', configObj)
-        // .then(resp => resp.json())
-        // .then(category => {
-            const data = await apiService.createCategory(newCategory)
-            const createdCategory = new Category(data)
-            createdCategory.renderCategory()
-            addEventsToItemBtn()
+        const data = await apiService.createCategory(newCategory)
+        const createdCategory = new Category(data)
+        createdCategory.renderCategory()
         
-         clearCategoryForm()    
+        addEventsToItemBtn()
+        clearCategoryForm()    
     } else { 
         const newTripCategory = {
             trip_id: e.target.dataset.tripid,
             category_id: arr[0].id
         }
-
-        // let configObj = {
-        //     method: 'POST',
-        //     body: JSON.stringify(newTripCategory),
-        //     headers: {
-        //         'Content-type': 'application/json',
-        //         'Accept': 'application/json'
-        //     }
-        // }
-        // fetch(BASE_URL + `/trip_categories`, configObj)
-        // .then(resp => resp.json())
-        // .then(category => {
         const data = await apiService.createTripCategory(newTripCategory)
         const createdTC = new TripCategory(data)
         createdTC.renderTripCategory()
-        addEventsToItemBtn()    
         
+        addEventsToItemBtn()    
         clearCategoryForm()   
     }
 }
@@ -197,50 +174,28 @@ function displayItemForm(e){
         <input type="submit">
      </form>
      `
-    document.querySelector("#item-form").addEventListener('submit', createItem) 
+    document.querySelector("#item-form").addEventListener('submit', createNewItem) 
 }
 
-function createItem(e){
-    let tripId = document.querySelector("#category-div").dataset.tripid
-    
-    let newItem = {
+async function createNewItem(e){
+    const tripId = document.querySelector("#category-div").dataset.tripid
+    const item = {
         name: e.target.querySelector("#name").value,
         category_id: e.target.dataset.categoryid,
         trip_id: tripId
     }
-
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(newItem),
-        headers: {
-            'Content-type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-
-    fetch(BASE_URL + '/items', configObj)
-    .then(resp => resp.json())
-    .then(item => {
-        let newItem = new Item(item)
-        newItem.renderItem(e) 
-        addEventsToItemBtn()
-        addEventsToRemoveItemBtn()
-        clearItemForm()
-    })  
+    const data = await apiService.createItem(item)
+    const newItem = new Item(data)
+    newItem.renderItem(e) 
+    addEventsToItemBtn()
+    addEventsToRemoveItemBtn()
+    clearItemForm()
 }
 
-function removeItem(e){
-    let configObj = {
-        method: 'DELETE',
-        headers: {
-            'Content-type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-    fetch(BASE_URL + `/items/${e.target.dataset.id}`, configObj)
-    .then(() => {
-        renderTrips()
-    })
+async function removeItem(e){
+    const id = e.target.dataset.id
+    await apiService.deleteItem(id) 
+    renderTrips()
 }
 
 function clearItemForm() {

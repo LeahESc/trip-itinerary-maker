@@ -63,5 +63,32 @@ class ApiService {
         return data
     }
 
+    async createItem(item){
+        let configObj = {
+            method: 'POST',
+            body: JSON.stringify(item),
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let resp = await fetch(this.baseURL + '/items', configObj)
+        let data = resp.json()
+        return data
+    }
+
+    async deleteItem(id){
+        let configObj = {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let resp = await fetch(this.baseURL + `/items/${id}`, configObj)
+        // let data = resp.json()
+        // return data
+    }
+
 
 }

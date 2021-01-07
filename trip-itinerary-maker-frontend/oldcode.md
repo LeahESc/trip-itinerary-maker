@@ -142,4 +142,46 @@
         // fetch(BASE_URL + '/categories')
     // .then(resp => resp.json())
     // .then(categories => {
-        
+
+
+== old create new category 
+     // let configObj = {
+        //     method: 'POST',
+        //     body: JSON.stringify(newCategory),
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // }
+        // fetch(BASE_URL + '/categories', configObj)
+        // .then(resp => resp.json())
+        // .then(category => {
+
+
+-- old create category from existing
+
+        // let configObj = {
+        //     method: 'POST',
+        //     body: JSON.stringify(newTripCategory),
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // }
+        // fetch(BASE_URL + `/trip_categories`, configObj)
+        // .then(resp => resp.json())
+        // .then(category => {
+
+--- old createitem 
+ // let configObj = {
+    //     method: 'POST',
+    //     body: JSON.stringify(newItem),
+    //     headers: {
+    //         'Content-type': 'application/json',
+    //         'Accept': 'application/json'
+    //     }
+    // }
+
+    // fetch(BASE_URL + '/items', configObj)
+    // .then(resp => resp.json())
+    // .then(item => {
