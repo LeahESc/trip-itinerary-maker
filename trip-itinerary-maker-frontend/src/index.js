@@ -41,29 +41,18 @@ function clearForm() {
     formDiv.innerHTML = ""
 }
 
-function createTrip(e){
+async function createTrip(e){
     e.preventDefault()
     let trip = {
         destination: e.target.querySelector("#destination").value
     }
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(trip),
-        headers: {
-            'Content-type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-    fetch(BASE_URL + '/trips', configObj)
-    .then(resp => resp.json())
-    .then(trip => {
-        const createdTrip = new Trip(trip)
-        main.innerHTML += createdTrip.renderNewTrip()
-        createdTrip.renderViewButton()
-   
-        attachClicksToButtons()
-        clearForm()
-    })  
+    const data = await apiService.createNewTrip(trip) 
+    const newTrip = new Trip(data)
+    main.innerHTML += newTrip.renderNewTrip()
+    newTrip.renderViewButton()
+
+    attachClicksToButtons()
+    clearForm() 
 }
 
 function attachClicksToButtons() {
@@ -73,22 +62,21 @@ function attachClicksToButtons() {
     })
 }
 
-function showTrip(e) { 
-    let id = e.target.dataset.id
+async function showTrip(e) { 
+    const id = e.target.dataset.id
     main.innerHTML = ""
-    fetch(BASE_URL + `/trips/${id}`)
-    .then(resp => resp.json())
-    .then(trip => {
-        let showTrip = new Trip(trip)
-        showTrip.displayTrip()
-        showTrip.categories.forEach(category => {
-            let newCategory = new Category(category)
-            newCategory.renderCategory(showTrip.id)
-        })
-        addEventsToCategoryBtn()
-        addEventsToItemBtn()
-        addEventsToRemoveItemBtn()
+    const data = await apiService.fetchTrip(id)
+    const showTrip = new Trip(data)
+
+    showTrip.displayTrip()
+    showTrip.categories.forEach(category => {
+        let newCategory = new Category(category)
+        newCategory.renderCategory(showTrip.id)
     })
+    addEventsToCategoryBtn()
+    addEventsToItemBtn()
+    addEventsToRemoveItemBtn()
+    
 }
 
 function addEventsToCategoryBtn(){
@@ -104,35 +92,33 @@ function addEventsToRemoveItemBtn(){
     document.querySelectorAll("#removeItem").forEach(button => button.addEventListener('click', removeItem))
 }
 
-function displayCategoryForm(e){ 
-    let categoryButton = document.querySelector("#categoryBtn")
+async function displayCategoryForm(e){ 
+    const categoryButton = document.querySelector("#categoryBtn")
     let categoryDiv = document.querySelector('#category-div')
+    const tripId = categoryDiv.dataset.tripid
     categoryDiv.removeChild(categoryButton)
-    let tripId = categoryDiv.dataset.tripid
+    
     let categoryFormDiv = document.createElement("div")
     categoryFormDiv.setAttribute("id","c-form-div")
     categoryDiv.appendChild(categoryFormDiv) 
     
-    fetch(BASE_URL + '/categories')
-    .then(resp => resp.json())
-    .then(categories => {
-        let categoryCheckboxes = categories.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
-        
-        categoryFormDiv.innerHTML =  `
-        <form id="category-form" data-tripId="${tripId}">
-            <label>Select from Existing:</label>
-            ${categoryCheckboxes} <br>
-            <label>Create a New Category:</label>
-            <input type="text" id="name">
-            <input type="submit">
-        </form>
-        `
-        document.querySelector("#category-form").addEventListener('submit', createCategory)
-    })
+    const data = await apiService.fetchCategories()
+    let categoryCheckboxes = data.map(c => `<label for="${c.id}">${c.name}</label><input type="checkbox" id="${c.id}" value="${c.name}" name="category[name]">`).join('')
+    
+    categoryFormDiv.innerHTML =  `
+    <form id="category-form" data-tripId="${tripId}">
+        <label>Select from Existing:</label>
+        ${categoryCheckboxes} <br>
+        <label>Create a New Category:</label>
+        <input type="text" id="name">
+        <input type="submit">
+    </form>
+    `
+    document.querySelector("#category-form").addEventListener('submit', createCategory)
 }
 
 function clearCategoryForm(){ 
-    let categoryDiv = document.querySelector('#category-div')
+    const categoryDiv = document.querySelector('#category-div')
     let categoryFormDiv = document.querySelector('#c-form-div')
     categoryFormDiv.parentNode.removeChild(categoryFormDiv)
     
@@ -144,51 +130,53 @@ function clearCategoryForm(){
 }
 
 
-function createCategory(e){
+async function createCategory(e){
     e.preventDefault()
-   let arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
+   const arr= Array.from(document.querySelectorAll("input")).filter(c => c.checked === true)
     if (arr.length === 0){
-        let newCategory = {
+        const newCategory = {
             name: e.target.querySelector("#name").value,
             trip_ids: [e.target.dataset.tripid]
         }
-        let configObj = {
-            method: 'POST',
-            body: JSON.stringify(newCategory),
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }
-        fetch(BASE_URL + '/categories', configObj)
-        .then(resp => resp.json())
-        .then(category => {
-            const newCategory = new Category(category)
-            newCategory.renderCategory()
+        // let configObj = {
+        //     method: 'POST',
+        //     body: JSON.stringify(newCategory),
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // }
+        // fetch(BASE_URL + '/categories', configObj)
+        // .then(resp => resp.json())
+        // .then(category => {
+            const data = await apiService.createCategory(newCategory)
+            const createdCategory = new Category(data)
+            createdCategory.renderCategory()
             addEventsToItemBtn()
-        }) 
+        
          clearCategoryForm()    
     } else { 
-        let newTripCategory = {
+        const newTripCategory = {
             trip_id: e.target.dataset.tripid,
             category_id: arr[0].id
         }
 
-        let configObj = {
-            method: 'POST',
-            body: JSON.stringify(newTripCategory),
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }
-        fetch(BASE_URL + `/trip_categories`, configObj)
-        .then(resp => resp.json())
-        .then(category => {
-            let newTripCategory = new TripCategory(category)
-            newTripCategory.renderTripCategory()
-            addEventsToItemBtn()    
-        }) 
+        // let configObj = {
+        //     method: 'POST',
+        //     body: JSON.stringify(newTripCategory),
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // }
+        // fetch(BASE_URL + `/trip_categories`, configObj)
+        // .then(resp => resp.json())
+        // .then(category => {
+        const data = await apiService.createTripCategory(newTripCategory)
+        const createdTC = new TripCategory(data)
+        createdTC.renderTripCategory()
+        addEventsToItemBtn()    
+        
         clearCategoryForm()   
     }
 }

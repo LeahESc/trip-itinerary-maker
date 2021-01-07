@@ -117,3 +117,29 @@
        // fetch(BASE_URL + "/trips")
         // .then(resp => resp.json())
         // .then(trips => {
+
+--- old showTrip fetch 
+    // fetch(BASE_URL + `/trips/${id}`)
+    // .then(resp => resp.json())
+    // .then(trip => {
+        // let showTrip = 
+
+
+-- old create trip
+ // let configObj = {
+    //     method: 'POST',
+    //     body: JSON.stringify(trip),
+    //     headers: {
+    //         'Content-type': 'application/json',
+    //         'Accept': 'application/json'
+    //     }
+    // }
+    // fetch(BASE_URL + '/trips', configObj)
+    // .then(resp => resp.json())
+    // .then(trip => {
+
+-- old get categories for checkboxes 
+        // fetch(BASE_URL + '/categories')
+    // .then(resp => resp.json())
+    // .then(categories => {
+        
