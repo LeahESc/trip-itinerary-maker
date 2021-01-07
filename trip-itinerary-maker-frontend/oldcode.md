@@ -96,4 +96,24 @@
         // addCategory.setAttribute("id", "categoryBtn")
         // categoryDiv.appendChild(addCategory)
         // addCategory.innerHTML = `Add Category`
+
+--- old rendering of new item 
+        // let itemLi = document.createElement("li")
+        // let categoryList = e.path[2]
+        // categoryList.appendChild(itemLi)
+
+        // itemLi.innerHTML += `
+        //     ${item.name}
+        //     <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
+        // `
+        // let addItem = document.createElement("button")
+        // addItem.setAttribute("id", "itemBtn")
+        // addItem.setAttribute("data-categoryId", `${item.category.id}`)
+        // addItem.innerHTML = `Add Item`
+        // categoryList.appendChild(addItem)
         
+--- old first fetch for all trips 
+
+       // fetch(BASE_URL + "/trips")
+        // .then(resp => resp.json())
+        // .then(trips => {

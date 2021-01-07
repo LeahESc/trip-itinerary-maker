@@ -1,3 +1,4 @@
+const apiService = new ApiService()
 const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
 let  main = document.querySelector("#main")
@@ -12,19 +13,16 @@ function bindEventListeners(){
     document.getElementById("trips").addEventListener('click', renderTrips)
 }
 
-function renderTrips() { 
+async function renderTrips() { 
     main.innerHTML = ''
-        fetch(BASE_URL + "/trips")
-        .then(resp => resp.json())
-        .then(trips => {
-            trips.map(trip => {
-            const newTrip = new Trip(trip)
-            newTrip.renderTrip()
-            newTrip.renderViewButton()
+    const trips = await apiService.fetchTrips()
+    trips.map(t => {
+    const trip = new Trip(t)
+    trip.renderTrip()
+    trip.renderViewButton()
 
-            attachClicksToButtons()
-        })
-    }) 
+    attachClicksToButtons()
+    })   
 }
   
 function displayTripForm(){
@@ -237,19 +235,6 @@ function createItem(e){
     .then(item => {
         let newItem = new Item(item)
         newItem.renderItem(e) 
-        // let itemLi = document.createElement("li")
-        // let categoryList = e.path[2]
-        // categoryList.appendChild(itemLi)
-
-        // itemLi.innerHTML += `
-        //     ${item.name}
-        //     <button id ="removeItem" data-id="${item.id}"> Remove Item </button>
-        // `
-        // let addItem = document.createElement("button")
-        // addItem.setAttribute("id", "itemBtn")
-        // addItem.setAttribute("data-categoryId", `${item.category.id}`)
-        // addItem.innerHTML = `Add Item`
-        // categoryList.appendChild(addItem)
         addEventsToItemBtn()
         addEventsToRemoveItemBtn()
         clearItemForm()
