@@ -86,8 +86,6 @@ class ApiService {
             }
         }
         let resp = await fetch(this.baseURL + `/items/${id}`, configObj)
-        // let data = resp.json()
-        // return data
     }
 
     async deleteTrip(id){

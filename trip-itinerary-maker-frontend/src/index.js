@@ -1,5 +1,5 @@
 const apiService = new ApiService()
-const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'http://localhost:3000'
 let formDiv = document.getElementById("trip-form")
 let  main = document.querySelector("#main")
 
