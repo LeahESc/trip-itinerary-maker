@@ -3,7 +3,7 @@ class Item {
         this.id = data.id
         this.name = data.name
         this.category_id = data.category.id
-        this.trip_id = data.trip_id
+        this.trip_id = data.trip.id
     }
 
     renderItem(e) {

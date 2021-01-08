@@ -72,8 +72,8 @@ class ApiService {
                 'Accept': 'application/json'
             }
         }
-        let res = await fetch(this.baseURL + '/items', configObj)
-        let data = res.json()
+        let resp = await fetch(this.baseURL + '/items', configObj)
+        let data = resp.json()
         return data
     }
 
