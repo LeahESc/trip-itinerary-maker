@@ -26,7 +26,7 @@ class Category {
                 let itemLi = document.createElement("li")
                 categoryList.appendChild(itemLi)
                 itemLi.innerHTML += `
-                ${item.name}  <button class="btn btn-outline-secondary btn-sm" id="removeItem" data-id="${item.id}"> Remove Item </button>
+                ${item.name}  <button class="btn btn-outline-secondary btn-sm" id="removeItem" data-itemId="${item.id}" data-id="${item.trip_id}"> Remove Item </button>
                 `
             
             })

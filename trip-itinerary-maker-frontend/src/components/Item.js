@@ -13,7 +13,7 @@ class Item {
 
     itemLi.innerHTML += `
             ${this.name}
-            <button class="btn btn-outline-secondary btn-sm" id="removeItem" data-id="${this.id}"> Remove Item </button>
+            <button class="btn btn-outline-secondary btn-sm" id="removeItem" data-itemId="${this.id}" data-id="${this.trip_id}"> Remove Item </button>
         `
     let addItem = document.createElement("button")
     addItem.setAttribute("id", "itemBtn")

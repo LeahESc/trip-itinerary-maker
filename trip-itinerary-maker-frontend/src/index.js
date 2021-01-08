@@ -203,9 +203,9 @@ async function createNewItem(e){
 }
 
 async function removeItem(e){
-    const id = e.target.dataset.id
+    const id = e.target.dataset.itemid
     await apiService.deleteItem(id) 
-    renderTrips()
+    showTrip(e)
 }
 
 function clearItemForm() {

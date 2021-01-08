@@ -72,8 +72,8 @@ class ApiService {
                 'Accept': 'application/json'
             }
         }
-        let resp = await fetch(this.baseURL + '/items', configObj)
-        let data = resp.json()
+        let res = await fetch(this.baseURL + '/items', configObj)
+        let data = res.json()
         return data
     }
 
@@ -85,7 +85,7 @@ class ApiService {
                 'Accept': 'application/json'
             }
         }
-        let resp = await fetch(this.baseURL + `/items/${id}`, configObj)
+        await fetch(this.baseURL + `/items/${id}`, configObj)
     }
 
     async deleteTrip(id){
