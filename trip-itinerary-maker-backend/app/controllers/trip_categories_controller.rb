@@ -1,7 +1,7 @@
 class TripCategoriesController < ApplicationController
     def index 
-        @tripcategories = TripCategory.all
-        render json: @tripcategories
+        tripcategories = TripCategory.all
+        render json: tripcategories
     end 
     def create
         # binding.pry

@@ -188,6 +188,7 @@ function displayItemForm(e){
 }
 
 async function createNewItem(e){
+    e.preventDefault()
     const tripId = document.querySelector("#category-div").dataset.tripid
     const item = {
         name: e.target.querySelector("#name").value,

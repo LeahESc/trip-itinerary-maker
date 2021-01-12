@@ -3,9 +3,9 @@ class TripsController < ApplicationController
 
   # GET /trips
   def index
-    @trips = Trip.all
+    trips = Trip.all
 
-    render json: @trips
+    render json: trips
   end
 
   # GET /trips/1
