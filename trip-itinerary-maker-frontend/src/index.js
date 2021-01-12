@@ -16,14 +16,14 @@ async function renderTrips() {
     main.innerHTML = ''
     const trips = await apiService.fetchTrips()
     trips.map(t => {
-    const trip = new Trip(t)
-    trip.renderTrip()
-    trip.renderButtons()
-    
-    attachClicksToButtons()
+        const trip = new Trip(t)
+        trip.renderTrip()
+        trip.renderButtons()
+        
+        attachClicksToButtons()
     })   
 }
-  
+
 function displayTripForm(){
     let html = `
     <form>
